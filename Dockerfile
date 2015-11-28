@@ -31,14 +31,16 @@ COPY ./ruby-versions.txt /root/ruby-versions.txt
 # Install multiple versions of ruby
 # Install Bundler for each version of ruby
 # Install the agent installer
-# Create Agents
+# Create Agent
 RUN xargs -L 1 rbenv install < /root/ruby-versions.txt && \
     echo 'gem: --no-rdoc --no-ri' >> /.gemrc && \
     bash -l -c 'for v in $(cat /root/ruby-versions.txt); do rbenv global $v; gem install bundler; done' && \
     npm install -g vsoagent-installer && \
     mkdir /opt/myagent && \
     cd /opt/myagent && \
-    vsoagent-installer
+    vsoagent-installer && \
+    echo "vsoagent\nvsoagent\n\n\n\n\n\n\n" | adduser vsoagent && \
+    chown -R vsoagent /opt/myagent
 
 WORKDIR /opt/myagent
 ENTRYPOINT /bin/bash
